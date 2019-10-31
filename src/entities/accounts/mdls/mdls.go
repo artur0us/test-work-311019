@@ -6,7 +6,7 @@ type BasicAuthAnswer struct {
 }
 
 type AccountTinyInfo struct {
-	AccountId      int64  `json:"account_id"`
+	AccountID      int64  `json:"account_id"`
 	Username       string `json:"username"`
 	CreatedAt      int64  `json:"created_at"`
 	AccountGroupID int    `json:"acc_group_id"`

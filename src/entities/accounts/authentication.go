@@ -42,7 +42,7 @@ func BasicAuth(username, password string) (bool, string, mdls.BasicAuthAnswer) {
 		var accountId int64
 		var passwordHashInDB string
 		err := rows.Scan(
-			&basicAuthAnswer.AccountTinyInfo.AccountId,
+			&basicAuthAnswer.AccountTinyInfo.AccountID,
 			&basicAuthAnswer.AccountTinyInfo.Username,
 			&basicAuthAnswer.AccountTinyInfo.CreatedAt,
 			&basicAuthAnswer.AccountTinyInfo.AccountGroupID,
@@ -78,10 +78,9 @@ func BasicAuth(username, password string) (bool, string, mdls.BasicAuthAnswer) {
 }
 
 func TokenAuth(token string) (bool, string, mdls.AccountTinyInfo) {
-	var accTinyInfo mdls.AccountTinyInfo
+	var accountTinyInfo mdls.AccountTinyInfo
 
 	// Token authentication logic
-	currentTime := time.Now().Unix()
 	rows, err := pgsqldrv.All["developer_notes"].Query(`
 		SELECT
 			accounts.id,
@@ -92,30 +91,30 @@ func TokenAuth(token string) (bool, string, mdls.AccountTinyInfo) {
 		INNER JOIN accounts ON accounts.id = accounts_sessions.account_id
 		INNER JOIN accounts_info ON accounts_info.account_id = accounts_sessions.account_id
 		WHERE token = $1 AND $2 < expires_at
-	`, token, currentTime)
+	`, token, time.Now().Unix())
 	defer rows.Close()
 	if err != nil {
 		log.Println("[i] SQL query error! [ accounts.TokenAuth() #1 ]\nMore info:")
 		log.Println(err)
-		return false, "Server error! Code: a.ta #1", accTinyInfo
+		return false, "Server error! Code: a.ta #1", accountTinyInfo
 	}
 	for rows.Next() {
 		err := rows.Scan(
-			&accTinyInfo.AccountId,
-			&accTinyInfo.Username,
-			&accTinyInfo.CreatedAt,
-			&accTinyInfo.AccountGroupID,
+			&accountTinyInfo.AccountID,
+			&accountTinyInfo.Username,
+			&accountTinyInfo.CreatedAt,
+			&accountTinyInfo.AccountGroupID,
 		)
 		if err != nil {
 			log.Println("[i] SQL answer parse error! [ accounts.TokenAuth() #2 ]\nMore info:")
 			log.Println(err)
-			return false, "Server error! Code: a.ta #2", accTinyInfo
+			return false, "Server error! Code: a.ta #2", accountTinyInfo
 		}
 
-		return true, "ok", accTinyInfo
+		return true, "ok", accountTinyInfo
 	}
 
-	return false, "Nonexistent authentication token!", accTinyInfo
+	return false, "Nonexistent authentication token!", accountTinyInfo
 }
 
 func IsTokenAuthed(token string) bool {

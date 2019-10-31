@@ -6,6 +6,7 @@ import (
 
 	_ "github.com/lib/pq"
 
+	"./constants"
 	"./mdls"
 )
 
@@ -14,15 +15,7 @@ var All map[string]*sql.DB
 func ConnectAll() {
 	All = make(map[string]*sql.DB)
 
-	allConnConfigs := []mdls.ConnConfig{
-		mdls.ConnConfig{
-			Host:     "localhost",
-			Port:     "5432",
-			Username: "artur0us",
-			Password: "xxxxxxxxxx",
-			DBName:   "developer_notes",
-		},
-	}
+	allConnConfigs := constants.GetAllConnConfigs()
 
 	for _, oneConnConfig := range allConnConfigs {
 		if err := connect(oneConnConfig); err != nil {
