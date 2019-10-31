@@ -19,7 +19,7 @@ func Create(token string, note mdls.NewNote) (bool, string) {
 	_, err := pgsqldrv.All["developer_notes"].Exec(`
 		INSERT INTO notes
 		(author_account_id, created_at, title, body)
-		VALUES($1, $2, $3, $4, $5)
+		VALUES($1, $2, $3, $4)
 	`, accountTinyInfo.AccountID, time.Now().Unix(), note.Title, note.Body)
 	if err != nil {
 		log.Println("[i] SQL query error! [ notes.Create() #1 ]\nMore info:")
@@ -45,12 +45,11 @@ func GetAll(token string) (bool, string, []mdls.Note) {
 			SELECT
 				id, author_account_id, created_at, title, body
 			FROM notes
-			INNER JOIN accounts ON accounts.id = notes.author_account_id
 		`)
 	} else {
 		rows, err = pgsqldrv.All["developer_notes"].Query(`
 			SELECT
-				id, author_account_id, created_at, title, body
+				notes.id, notes.author_account_id, notes.created_at, notes.title, notes.body
 			FROM notes
 			INNER JOIN accounts ON accounts.id = notes.author_account_id
 			WHERE notes.author_account_id = $1
@@ -65,6 +64,7 @@ func GetAll(token string) (bool, string, []mdls.Note) {
 	for rows.Next() {
 		var currentNote mdls.Note
 		err := rows.Scan(
+			&currentNote.ID,
 			&currentNote.AuthorAccountID,
 			&currentNote.CreatedAt,
 			&currentNote.Title,
@@ -94,9 +94,8 @@ func GetByID(token string, id int64) (bool, string, mdls.Note) {
 		SELECT
 			id, author_account_id, created_at, title, body
 		FROM notes
-		INNER JOIN accounts ON accounts.id = notes.author_account_id
 		WHERE notes.id = $1
-	`, accountTinyInfo.AccountID)
+	`, id)
 	defer rows.Close()
 	if err != nil {
 		log.Println("[i] SQL query error! [ notes.GetByID() #1 ]\nMore info:")
@@ -105,6 +104,7 @@ func GetByID(token string, id int64) (bool, string, mdls.Note) {
 	}
 	for rows.Next() {
 		err := rows.Scan(
+			&note.ID,
 			&note.AuthorAccountID,
 			&note.CreatedAt,
 			&note.Title,
@@ -160,7 +160,7 @@ func DeleteByID(token string, id int64) (bool, string) {
 	}
 	_, err := pgsqldrv.All["developer_notes"].Exec(`
 		DELETE FROM notes WHERE id = $1
-	`, accountTinyInfo.AccountID)
+	`, id)
 	if err != nil {
 		log.Println("[i] SQL query error! [ notes.DeleteByID() #1 ]\nMore info:")
 		log.Println(err)

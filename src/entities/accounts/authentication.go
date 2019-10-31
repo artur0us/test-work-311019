@@ -119,5 +119,6 @@ func TokenAuth(token string) (bool, string, mdls.AccountTinyInfo) {
 
 func IsTokenAuthed(token string) bool {
 	// Token authentication logic
-	return true
+	flag, _, _ := TokenAuth(token)
+	return flag
 }

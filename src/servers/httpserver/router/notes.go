@@ -2,8 +2,12 @@ package router
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
+	"../../../entities/accounts"
+	"../../../entities/notes"
+	notesMdls "../../../entities/notes/mdls"
 	"../constants"
 	"github.com/labstack/echo"
 )
@@ -14,10 +18,28 @@ func RegNotes(echoSrv *echo.Echo) {
 	// ======================================= //
 
 	// Note creation
-	echoSrv.POST("/api/v1/notes/", func(c echo.Context) error {
+	echoSrv.POST("/api/v1/notes", func(c echo.Context) error {
 		answer := constants.TemplateReqAnswer()
 
-		//
+		if !accounts.IsTokenAuthed(c.Request().Header.Get("Token")) {
+			answer.EntityStatus = -1
+			answer.Message = "Authentication error!"
+		} else {
+			note := notesMdls.NewNote{
+				Title: c.FormValue("title"),
+				Body:  c.FormValue("body"),
+			}
+			if note.Title == "" || note.Body == "" {
+				answer.EntityStatus = -2
+				answer.Message = "Title or body of creating note is empty!"
+			} else {
+				flag, msg := notes.Create(c.Request().Header.Get("Token"), note)
+				answer.Message = msg
+				if !flag {
+					answer.EntityStatus = -3
+				}
+			}
+		}
 
 		if strings.Contains(strings.ToLower(c.Request().Header.Get("Answer-Type")), "xml") {
 			return c.XML(http.StatusOK, answer)
@@ -30,7 +52,18 @@ func RegNotes(echoSrv *echo.Echo) {
 	echoSrv.GET("/api/v1/notes", func(c echo.Context) error {
 		answer := constants.TemplateReqAnswer()
 
-		//
+		if !accounts.IsTokenAuthed(c.Request().Header.Get("Token")) {
+			answer.EntityStatus = -1
+			answer.Message = "Authentication error!"
+		} else {
+			flag, msg, data := notes.GetAll(c.Request().Header.Get("Token"))
+			answer.Message = msg
+			if !flag {
+				answer.EntityStatus = -2
+			} else {
+				answer.Data = data
+			}
+		}
 
 		if strings.Contains(strings.ToLower(c.Request().Header.Get("Answer-Type")), "xml") {
 			return c.XML(http.StatusOK, answer)
@@ -43,7 +76,24 @@ func RegNotes(echoSrv *echo.Echo) {
 	echoSrv.GET("/api/v1/notes/:note_id", func(c echo.Context) error {
 		answer := constants.TemplateReqAnswer()
 
-		//
+		if !accounts.IsTokenAuthed(c.Request().Header.Get("Token")) {
+			answer.EntityStatus = -1
+			answer.Message = "Authentication error!"
+		} else {
+			noteID, err := strconv.ParseInt(c.Param("note_id"), 10, 64)
+			if err != nil {
+				answer.EntityStatus = -2
+				answer.Message = "Invalid note id specified in URL!"
+			} else {
+				flag, msg, data := notes.GetByID(c.Request().Header.Get("Token"), noteID)
+				answer.Message = msg
+				if !flag {
+					answer.EntityStatus = -3
+				} else {
+					answer.Data = data
+				}
+			}
+		}
 
 		if strings.Contains(strings.ToLower(c.Request().Header.Get("Answer-Type")), "xml") {
 			return c.XML(http.StatusOK, answer)
@@ -69,7 +119,16 @@ func RegNotes(echoSrv *echo.Echo) {
 	echoSrv.DELETE("/api/v1/notes", func(c echo.Context) error {
 		answer := constants.TemplateReqAnswer()
 
-		//
+		if !accounts.IsTokenAuthed(c.Request().Header.Get("Token")) {
+			answer.EntityStatus = -1
+			answer.Message = "Authentication error!"
+		} else {
+			flag, msg := notes.DeleteAll(c.Request().Header.Get("Token"))
+			answer.Message = msg
+			if !flag {
+				answer.EntityStatus = -2
+			}
+		}
 
 		if strings.Contains(strings.ToLower(c.Request().Header.Get("Answer-Type")), "xml") {
 			return c.XML(http.StatusOK, answer)
@@ -82,7 +141,22 @@ func RegNotes(echoSrv *echo.Echo) {
 	echoSrv.DELETE("/api/v1/notes/:id", func(c echo.Context) error {
 		answer := constants.TemplateReqAnswer()
 
-		//
+		if !accounts.IsTokenAuthed(c.Request().Header.Get("Token")) {
+			answer.EntityStatus = -1
+			answer.Message = "Authentication error!"
+		} else {
+			noteID, err := strconv.ParseInt(c.Param("note_id"), 10, 64)
+			if err != nil {
+				answer.EntityStatus = -2
+				answer.Message = "Invalid note id specified in URL!"
+			} else {
+				flag, msg := notes.DeleteByID(c.Request().Header.Get("Token"), noteID)
+				answer.Message = msg
+				if !flag {
+					answer.EntityStatus = -3
+				}
+			}
+		}
 
 		if strings.Contains(strings.ToLower(c.Request().Header.Get("Answer-Type")), "xml") {
 			return c.XML(http.StatusOK, answer)
