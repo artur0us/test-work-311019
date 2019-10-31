@@ -39,7 +39,6 @@ func BasicAuth(username, password string) (bool, string, mdls.BasicAuthAnswer) {
 		return false, "Server error! Code: a.ba #1", basicAuthAnswer
 	}
 	for rows.Next() {
-		var accountId int64
 		var passwordHashInDB string
 		err := rows.Scan(
 			&basicAuthAnswer.AccountTinyInfo.AccountID,
@@ -63,7 +62,7 @@ func BasicAuth(username, password string) (bool, string, mdls.BasicAuthAnswer) {
 		token := uuid.New().String()
 		createdAt := time.Now().Unix()
 		expiresAt := createdAt + ((((60 * 60) * 24) * 7) * 2) // Two weeks
-		_, err = pgsqldrv.All["developer_notes"].Exec("INSERT INTO accounts_sessions(account_id, token, created_at, expires_at, user_agent_info) VALUES($1, $2, $3, $4, $5)", accountId, token, createdAt, expiresAt, "Some info about client")
+		_, err = pgsqldrv.All["developer_notes"].Exec("INSERT INTO accounts_sessions(account_id, token, created_at, expires_at, user_agent_info) VALUES($1, $2, $3, $4, $5)", basicAuthAnswer.AccountTinyInfo.AccountID, token, createdAt, expiresAt, "Some info about client")
 		if err != nil {
 			log.Println("[i] SQL query error! [ accounts.BasicAuth() #3 ]\nMore info:")
 			log.Println(err)
