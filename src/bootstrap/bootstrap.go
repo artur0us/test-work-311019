@@ -14,5 +14,4 @@ func All() {
 
 	log.Println("[i] Starting HTTP server...")
 	httpserver.Start()
-	log.Println("[i] OK")
 }
