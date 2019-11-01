@@ -1,7 +1,7 @@
 package constants
 
 import (
-	"../mdls"
+	"github.com/artur0us/test-work-311019/servers/httpserver/mdls"
 )
 
 func TemplateReqAnswer() mdls.ReqAnswer {

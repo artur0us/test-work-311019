@@ -1,7 +1,7 @@
 package constants
 
 import (
-	"../mdls"
+	"github.com/artur0us/test-work-311019/drivers/pgsqldrv/mdls"
 )
 
 func GetAllConnConfigs() []mdls.ConnConfig {
@@ -9,9 +9,9 @@ func GetAllConnConfigs() []mdls.ConnConfig {
 		mdls.ConnConfig{
 			Host:     "localhost",
 			Port:     "5432",
-			Username: "artur0us",
-			Password: "xxxxxxxxxx",
-			DBName:   "developer_notes",
+			Username: "postgres",
+			Password: "postgres",
+			DBName:   "test_work",
 		},
 	}
 }

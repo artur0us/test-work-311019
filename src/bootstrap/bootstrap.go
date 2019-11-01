@@ -3,8 +3,8 @@ package bootstrap
 import (
 	"log"
 
-	"../drivers/pgsqldrv"
-	"../servers/httpserver"
+	"github.com/artur0us/test-work-311019/drivers/pgsqldrv"
+	"github.com/artur0us/test-work-311019/servers/httpserver"
 )
 
 func All() {

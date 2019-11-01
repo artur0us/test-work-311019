@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"../../drivers/pgsqldrv"
-	"./mdls"
+	"github.com/artur0us/test-work-311019/drivers/pgsqldrv"
+	"github.com/artur0us/test-work-311019/entities/accounts/mdls"
 )
 
 func GetTinyInfoByToken(token string) (bool, mdls.AccountTinyInfo) {

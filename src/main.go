@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"./bootstrap"
+	"github.com/artur0us/test-work-311019/bootstrap"
 )
 
 func main() {
