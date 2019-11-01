@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	echoLog "github.com/labstack/gommon/log"
 
-	"./router"
+	"github.com/artur0us/test-work-311019/servers/httpserver/router"
 )
 
 var EchoServer *echo.Echo

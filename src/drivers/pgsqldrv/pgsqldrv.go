@@ -6,8 +6,8 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"./constants"
-	"./mdls"
+	"github.com/artur0us/test-work-311019/drivers/pgsqldrv/constants"
+	"github.com/artur0us/test-work-311019/drivers/pgsqldrv/mdls"
 )
 
 var All map[string]*sql.DB

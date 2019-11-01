@@ -6,8 +6,8 @@ import (
 
 	"github.com/labstack/echo"
 
-	"../../../entities/accounts"
-	"../constants"
+	"github.com/artur0us/test-work-311019/entities/accounts"
+	"github.com/artur0us/test-work-311019/servers/httpserver/constants"
 )
 
 func RegAccounts(echoSrv *echo.Echo) {

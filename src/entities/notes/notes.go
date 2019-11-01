@@ -5,9 +5,10 @@ import (
 	"log"
 	"time"
 
-	"../../drivers/pgsqldrv"
-	"../accounts"
-	"./mdls"
+	"github.com/artur0us/test-work-311019/drivers/pgsqldrv"
+	"github.com/artur0us/test-work-311019/entities/accounts"
+	//"github.com/artur0us/test-work-311019/entities/accounts/mdls"
+	"github.com/artur0us/test-work-311019/entities/notes/mdls"
 )
 
 func Create(token string, note mdls.NewNote) (bool, string) {

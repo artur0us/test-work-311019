@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	"../../../entities/accounts"
-	"../../../entities/notes"
-	notesMdls "../../../entities/notes/mdls"
-	"../constants"
+	"github.com/artur0us/test-work-311019/entities/accounts"
+	"github.com/artur0us/test-work-311019/entities/notes"
+	notesMdls "github.com/artur0us/test-work-311019/entities/notes/mdls"
+	"github.com/artur0us/test-work-311019/servers/httpserver/constants"
 	"github.com/labstack/echo"
 )
 

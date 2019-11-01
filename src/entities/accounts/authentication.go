@@ -8,8 +8,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"../../drivers/pgsqldrv"
-	"./mdls"
+	"github.com/artur0us/test-work-311019/drivers/pgsqldrv"
+	"github.com/artur0us/test-work-311019/entities/accounts/mdls"
 )
 
 func BasicAuth(username, password string) (bool, string, mdls.BasicAuthAnswer) {
